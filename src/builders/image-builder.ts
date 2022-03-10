@@ -11,7 +11,7 @@ export class ImageBuilder implements IImageBuilder {
   }
 
   optimize = (): ImageBuilder => {
-    this.baseUrl.concat("/m");
+    this.baseUrl = this.baseUrl.concat("/m");
     return this;
   };
 
@@ -37,7 +37,19 @@ export class ImageBuilder implements IImageBuilder {
   };
 
   build = (): string => {
-    return this.baseUrl;
+    const filters: string =
+      Object.keys(this.filters).length > 0
+        ? this.getFiltersString(this.filters)
+        : "";
+    return this.baseUrl + filters;
+  };
+
+  getFiltersString = (filters: any): string => {
+    let filterStr = "/filters:";
+    for (const filter in filters) {
+      filterStr = filterStr.concat(`${filter}(${filters[filter]})`);
+    }
+    return filterStr;
   };
 
   getSizeString = (size: Size) => {
